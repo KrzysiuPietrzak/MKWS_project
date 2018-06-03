@@ -1,0 +1,124 @@
+\documentclass[11pt]{article}
+\usepackage[top=2.5cm, bottom=2.5cm, right=2cm, left=2cm ]{geometry}
+\usepackage{Arial}
+\usepackage{graphicx}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\begin{document}
+\thispagestyle{empty}
+\begin{flushright}
+Krzysztof Pietrzak\\
+nr albumu: 276459\\
+\end{flushright}
+\bigskip \bigskip \bigskip \bigskip \bigskip \bigskip \bigskip \bigskip 
+\bigskip \bigskip \bigskip \bigskip \bigskip \bigskip 
+\begin{center}
+\textbf{\Huge{Projekt MKWS}}\\
+\end{center}
+\bigskip
+\begin{center}
+\textbf{\Huge{Computing of the combustion parameters for a liquid propellant rocket engine}}
+\end{center}
+\begin{flushright}
+\vspace*{\fill}
+Data oddania projektu: 03.06.2018
+\end{flushright}
+\newpage
+\pagestyle{fancy}
+\fancyhead{}
+\fancyfoot{}
+\fancyfoot[R]{\thepage}
+\setcounter{page}{1}
+\section{Introduction}
+The following project will present approach to compute the combustion parameters for a liquid propellant rocket engine. The result of this study would be determination of parameters that occur for oxidizer-fuel ratio (O/F) that provides the highest specific impulse. During the project two different chemical directories have been used, Cantera and Nasa CEA(propep32). In both cases, above directories have been used via MATLAB software. 
+\section{Models}
+The propellant is a mixture of oxidizer and fuel gases. In this project the following substances have been used as fuel and oxidizer:\\
+\begin{itemize}
+\item Fuel: kerosene (RP-1)
+\item Oxidizer: nitrous oxide (N2O)
+\end{itemize}
+For above substances the following properties have been defined:\\
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline 
+Property & Nitrous oxide & Kerosene \\ 
+\hline
+State of matter & gas & liquid\\
+\hline 
+Chemical formula & N2O & C12H26 \\ 
+\hline 
+Molar mass [g/mol] & 44.0129 & 170.34 \\ 
+\hline 
+Density $[kg/m^3]$ & 1.799 & 750.13\\
+\hline
+Std enthalpy of formation [J/kg] & 1860000 & -131060 \\
+\hline
+\end{tabular} 
+\end{center}
+For both directories the same input values have been used. Input values used for calculations are shown in the following table:\\
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+Input data  & Value \\ 
+\hline 
+Pressure in combustion chamber [atm] & 20 \\ 
+\hline 
+ Pressure at exit [atm] & 1 \\ 
+\hline 
+Temperature of reactants [K] & 298 \\ 
+\hline 
+\end{tabular} 
+\end{center}
+\newpage
+\subsection{Cantera model}
+Due to the fact that there is no suitable model of kerosene in Cantera directory, I decided to create new set of chemical equations that approximately represent combustion process. Four different reactions have been specified depending on O/F. \\
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline 
+O/F & Chemical reaction \\ 
+\hline 
+$O/F \leq 3.1$ & $ a_1*C_{12}H_{26}+a_2*N_2O --> a_3*CO+a_4*H_2+a_5*N_2+a_6*C_{12}H_{26} $ \\ 
+\hline 
+$3.1<O/F\leq 6.2$ & $ a_1*C_{12}H_{26}+a_2*N_2O --> a_3*CO+a_4*H_2+a_5*H_2O+a_6*N_2 $ \\ 
+\hline 
+$6.2<O/F\leq 9.56$ & $ a_1*C_{12}H_{26}+a_2*N_2O --> a_3*CO_2+a_4*H_2O+a_5*N_2+a_6*H_2 $ \\ 
+\hline 
+$9.56<O/F$ & $ a_1*C_{12}H_{26}+a_2*N_2O --> a_3*CO_2+a_4*H_2O+a_5*N_2+a_6*N_2O $ \\ 
+\hline 
+\end{tabular} 
+\end{center}
+Based on above reactions and standard enthalpies of formation for  adequate substances, the heat revealed during combustion process has been computed. Due to the fact that all products are defined in Cantera,the temperature in combustion chamber has been evaluated considering the fact that specific heat strongly depends on temperature. Also the phenomenon of fuel vaporization has been omitted what results in approximation that heat of vaporization for kerosene is close to zero.  \\
+As a result of above reactions and temperature the specific impulse could be computed based on following equation:
+$$Isp=\sqrt{\frac{kR_{gas}T_c}{k-1}\left[1-\left(\frac{p_e}{p_c}\right)^{\frac{k-1}{k}}\right]}$$ \\
+where:\\
+$k$ = ratio of specific heats, cp/cv \\
+$p_e$ = nozzle exit pressure \\
+$p_c$ = combustion chamber pressure \\ 
+$T_c$ = combustion chamber temperature \\
+$R_{gas}$ = exhaust flow specific gas constant\\
+\subsection{Nasa CEA model}
+Approximately the same model has been implemented for Nasa CEA software, however none of the chemical reactions have to be specified. Furthermore, specific impulse has been evaluated automatically.\\
+\newpage
+\section{Results}
+\subsection{Cantera}
+\begin{center}
+\includegraphics[scale=0.70]{results_cantera}
+\end{center}
+\subsection{Nasa CEA}
+\begin{center}
+\includegraphics[scale=0.75]{results_propep}
+\end{center}
+\subsection{Specific results Nasa CEA}
+\begin{center}
+\includegraphics[scale=0.72]{specific_results_propep}
+\end{center}
+\section{Comparison of results}
+Comparing results obtained from Cantera and Nasa CEA it's visible that there is vast variety between specific impulses. Specific impulse from Nasa CEA is about 30\% higher than specific impulse from Cantera. Such a difference may be caused by significant simplification of chemical reactions. However, temperature in combustion chamber is approximately on the same level, mean molar mass of exhaust gases end ratio of specific heat may vary. The main difference in mean molar mass is probably caused by ignoring ionization effect that is typical for temperature at similar level.  \\
+It is quite extraordinary that the maximum of specific impulse occurs at the same level of oxidizer-fuel ratio both for Cantera and Nasa CEA results. In both cases the maximum of specific impulse occurs at O/F level around 6.
+\section{Summary}
+Comparison of results from Cantera and Nasa CEA leads to conclusion that such simplification of chemical reactions may result in fine temperature results nonetheless it may also lead to wrong specific impulse where error is at level of 30\%. Therefore for further study of liquid propellant rocket engines usage of Nasa CEA software instead of Cantera is preferable.\\
+\section{Code}
+Codes used for calculations are available on my GitHub account. Three separate have been used. One for Nasa CEA, two for cantera. The reason why two separate scripts have been used is because the function computing the temperature in the combustion chamber is quite long itself therefore external function especially for that purpose have been implemented.\\
+Link to GitHub account:\\ 
+\url{https://github.com/KrzysiuPietrzak/MKWS_project}
+\end{document}
